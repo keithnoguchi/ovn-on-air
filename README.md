@@ -34,10 +34,12 @@ KVM instances.
 |                          air                             |
 |                                                          |
 +----------------------------------------------------------+
-
 ```
 
 ## Playbooks
+
+1. [build.yml](#buildyml)
+2. [install.yml](#installyml)
 
 ### build.yml
 
