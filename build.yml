@@ -33,6 +33,11 @@
 
     - name: check the build dependency with dpkg-checkbuilddeps
       shell: >
-        cd /tmp/ovs
+        cd /tmp/ovs &&
         dpkg-checkbuilddeps
       changed_when: false
+
+    - name: build OvS, as in ovs/Documentaions/intro/install/debian.rst!
+      shell: >
+        cd /tmp/ovs &&
+        DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
