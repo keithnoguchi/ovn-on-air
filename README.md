@@ -77,6 +77,13 @@ This playbook will upload the deb packages and install on all the nodes.
 air$ ansible-playbook configure.yml
 ```
 
+This playbook will
+
+1. Open up OVN ports on the `central` nodes
+2. Configure integration bridge, `br-int` on `chassis` nodes
+3. Configure OVN central node IP on `chassis` nodes
+4. Configure OVN encapsulation type/IP on `chassis` nodes
+
 ## References
 
 Many thanks to all those docs!

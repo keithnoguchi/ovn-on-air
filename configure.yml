@@ -1,10 +1,43 @@
 ---
-- name: configure OVN
-  hosts: gateway
+- name: configure central nodes
+  hosts: central
   gather_facts: no
   become: yes
   tasks:
-    - name: open OVN ports
-      shell: >
-        ovn-nbctl set-connection ptcp:6641 &&
-        ovn-sbctl set-connection ptcp:6642
+    - name: open OVN north bound port, TCP/6641
+      command: ovn-nbctl set-connection ptcp:6641
+
+    - name: open OVN south bound port, TCP/6642
+      command: ovn-sbctl set-connection ptcp:6642
+
+- name: configure chassis nodes
+  hosts: chassis
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: create integration bridge
+      openvswitch_bridge: bridge=br-int state=present fail_mode=secure
+
+    - name: connect to the central database
+      openvswitch_db:
+        table: Open_vSwitch
+        record: .
+        col: external_ids
+        key: ovn-remote
+        value: "{{ ovn_remote }}"
+
+    - name: use geneve as a overlay encapsulation protocol
+      openvswitch_db:
+        table: Open_vSwitch
+        record: .
+        col: external_ids
+        key: ovn-encap-type
+        value: geneve
+
+    - name: use geneve as a overlay encapsulation protocol
+      openvswitch_db:
+        table: Open_vSwitch
+        record: .
+        col: external_ids
+        key: ovn-encap-ip
+        value: "{{ ovn_encap_ip }}"

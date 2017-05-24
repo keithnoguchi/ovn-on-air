@@ -1,13 +1,15 @@
 [ovn:children]
-gateway
+central
 chassis
 
 [build]
 hv11
 
-[gateway]
+[central]
 hv11
 
 [chassis]
-hv12
-hv13
+hv12 ovn_encap_ip=192.168.122.112
+hv13 ovn_encap_ip=192.168.122.113
+[chassis:vars]
+ovn_remote=tcp:192.168.122.111:6642
