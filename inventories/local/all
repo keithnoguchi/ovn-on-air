@@ -1,3 +1,7 @@
+[all:children]
+gateway
+chassis
+
 [build]
 hv11
 
