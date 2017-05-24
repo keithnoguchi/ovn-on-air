@@ -1,0 +1,10 @@
+---
+- name: configure OVN
+  hosts: gateway
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: open OVN ports
+      shell: >
+        ovn-nbctl set-connection ptcp:6641 &&
+        ovn-sbctl set-connection ptcp:6642

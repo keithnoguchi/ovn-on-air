@@ -40,6 +40,7 @@ KVM instances.
 
 1. [build.yml](#buildyml)
 2. [install.yml](#installyml)
+3. [configure.yml](#configureyml)
 
 ### build.yml
 
@@ -67,6 +68,14 @@ air$ ansible-playbook install.yml
 ```
 
 This playbook will upload the deb packages and install on all the nodes.
+
+### configure.yml
+
+[configure.yml](configure.yml) will configure OvS/OVN for virtual networking.
+
+```
+air$ ansible-playbook configure.yml
+```
 
 ## References
 
