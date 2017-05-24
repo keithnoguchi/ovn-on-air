@@ -40,7 +40,7 @@ KVM instances.
 
 1. [build.yml](#buildyml)
 2. [install.yml](#installyml)
-3. [configure.yml](#configureyml)
+3. [setup.yml](#setupyml)
 
 ### build.yml
 
@@ -69,12 +69,12 @@ air$ ansible-playbook install.yml
 
 This playbook will upload the deb packages and install on all the nodes.
 
-### configure.yml
+### setup.yml
 
-[configure.yml](configure.yml) will configure OvS/OVN for virtual networking.
+[setup.yml](setup.yml) will setup OvS/OVN for virtual networking.
 
 ```
-air$ ansible-playbook configure.yml
+air$ ansible-playbook setup.yml
 ```
 
 This playbook will
@@ -83,6 +83,26 @@ This playbook will
 2. Configure integration bridge, `br-int` on `chassis` nodes
 3. Configure OVN central node IP on `chassis` nodes
 4. Configure OVN encapsulation type/IP on `chassis` nodes
+
+After the playbook run, you should be able to see the OVN connection, `TCP/6642`
+between the central node and the chassis nodes, as shown below.
+
+```
+air$ ssh hv11 netstat -antp
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:6641            0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:6642            0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -
+tcp        0     72 192.168.122.111:22      192.168.122.1:60624     ESTABLISHED -
+tcp        0      0 192.168.122.111:22      192.168.122.1:60618     ESTABLISHED -
+tcp        0      0 192.168.122.111:6642    192.168.122.112:47680   ESTABLISHED -
+tcp        0      0 192.168.122.111:6642    192.168.122.113:50234   ESTABLISHED -
+tcp6       0      0 :::22                   :::*                    LISTEN      -
+air$
+```
 
 ## References
 
