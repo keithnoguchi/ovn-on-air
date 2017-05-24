@@ -1,6 +1,7 @@
 # OVN on air
 
-Let's make OVN, Open Virtual Networking, on MacBook Air!
+Let's make [OVN, Open Virtual Network](http://openvswitch.org/support/dist-docs/ovn-architecture.7.html),
+on [MacBook Air](https://github.com/keinohguchi/arch-on-air)!
 
 1. [Setup](#setup)
 2. [Playbooks](#playbooks)

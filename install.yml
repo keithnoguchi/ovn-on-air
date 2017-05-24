@@ -1,0 +1,18 @@
+---
+- name: install OvS packages on all the machines
+  hosts: all
+  gather_facts: false
+  become: true
+  vars:
+    ovs_version: 2.7.90-1
+  tasks:
+    - name: copy deb packages to all the node, except the build node
+      copy: src=/tmp/{{ item }} dest=/tmp/{{ item }}
+      with_items:
+        - openvswitch-datapath-dkms_{{ ovs_version }}_all.deb
+        - openvswitch-common_{{ ovs_version }}_amd64.deb
+        - openvswitch-switch_{{ ovs_version }}_amd64.deb
+        - ovn-common_{{ ovs_version }}_amd64.deb
+        - ovn-central_{{ ovs_version }}_amd64.deb
+        - ovn-host_{{ ovs_version }}_amd64.deb
+      when: "'build' not in group_names"
