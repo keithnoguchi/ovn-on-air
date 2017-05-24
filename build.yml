@@ -30,3 +30,9 @@
         - python-twisted-conch
         - python-zopeinterface
         - python-six
+
+    - name: check the build dependency with dpkg-checkbuilddeps
+      shell: >
+        cd /tmp/ovs
+        dpkg-checkbuilddeps
+      changed_when: false
