@@ -41,6 +41,7 @@ KVM instances.
 1. [build.yml](#buildyml)
 2. [install.yml](#installyml)
 3. [setup.yml](#setupyml)
+4. [configure.yml](configureyml)
 
 ### build.yml
 
@@ -51,7 +52,7 @@ KVM instances.
 air$ ansible-playbook build.yml
 ```
 
-This playbook will
+This playbook will:
 
 1. setup the `hv11` as a build machine
 2. git clone the latest OvS from the github
@@ -77,7 +78,7 @@ This playbook will upload the deb packages and install on all the nodes.
 air$ ansible-playbook setup.yml
 ```
 
-This playbook will
+This playbook will:
 
 1. Open up OVN ports on the `central` nodes
 2. Configure integration bridge, `br-int` on `chassis` nodes
@@ -101,6 +102,42 @@ tcp        0      0 192.168.122.111:22      192.168.122.1:60618     ESTABLISHED 
 tcp        0      0 192.168.122.111:6642    192.168.122.112:47680   ESTABLISHED -
 tcp        0      0 192.168.122.111:6642    192.168.122.113:50234   ESTABLISHED -
 tcp6       0      0 :::22                   :::*                    LISTEN      -
+air$
+```
+
+### configure.yml
+
+Now, all the nodes got configured and talking each other.  Let's configure the OVN!
+
+```
+air$ ansible-playbook configure.yml
+```
+
+This playbook will:
+
+1. Create logical switches for each tenant, e.g. red, blue, green
+2. Create logical ports, e.g. red1, red2, under the appropriate switches
+3. Setup MAC address and MAC address based port security on the appropriate switches
+
+Here is the result of the logical switches after the playbook run.
+
+```
+air$  ssh hv11 sudo ovn-nbctl show
+switch 23865fe0-92a2-4289-867b-36237eeba077 (green)
+    port green2
+        addresses: ["00:00:00:13:0c:01"]
+    port green1
+        addresses: ["00:00:00:12:0c:01"]
+switch 809d63e6-32d6-4698-b9d2-b973f951c69c (red)
+    port red2
+        addresses: ["00:00:00:13:0a:01"]
+    port red1
+        addresses: ["00:00:00:12:0a:01"]
+switch 20af443f-e086-4e1e-83bf-0f5a3d7d3e47 (blue)
+    port blue1
+        addresses: ["00:00:00:12:0b:01"]
+    port blue2
+        addresses: ["00:00:00:13:0b:01"]
 air$
 ```
 

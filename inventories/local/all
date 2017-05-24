@@ -7,6 +7,13 @@ hv11
 
 [central]
 hv11
+[central:vars]
+red1_mac=00:00:00:12:0a:01
+red2_mac=00:00:00:13:0a:01
+blue1_mac=00:00:00:12:0b:01
+blue2_mac=00:00:00:13:0b:01
+green1_mac=00:00:00:12:0c:01
+green2_mac=00:00:00:13:0c:01
 
 [chassis]
 hv12 ovn_encap_ip=192.168.122.112
