@@ -44,6 +44,13 @@ KVM instances.
 air$ ansible-playbook build.yml
 ```
 
+This playbook run will
+
+1 setup the `hv11` as a build machine
+2 git clone the latest OvS from the github
+3 build OvS/OVN
+4 download the deb package from the build machine
+
 ## References
 
 Many thanks to all those docs!
