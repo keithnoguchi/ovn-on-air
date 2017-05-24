@@ -1,0 +1,10 @@
+---
+- name: setup build environment
+  hosts: build
+  gather_facts: no
+  become: yes
+  tasks:
+    - apt: pkg={{ item }} update_cache=yes
+      with_items:
+        - build-essential
+        - fakeroot
