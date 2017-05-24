@@ -44,12 +44,25 @@ KVM instances.
 air$ ansible-playbook build.yml
 ```
 
-This playbook run will
+This playbook will
 
-1 setup the `hv11` as a build machine
-2 git clone the latest OvS from the github
-3 build OvS/OVN
-4 download the deb package from the build machine
+1. setup the `hv11` as a build machine
+2. git clone the latest OvS from the github
+3. build OvS/OVN
+4. download the deb package from the build machine
+
+### install.yml
+
+[install.yml](install.yml) will install the required deb packages to all
+the node.
+
+```
+air$ ansible-playbook install.yml
+```
+
+This playbook will
+
+1. copy deb packages downloaded by [build.yml](build.yml) playbook
 
 ## References
 
