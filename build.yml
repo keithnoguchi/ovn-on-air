@@ -4,7 +4,13 @@
   gather_facts: no
   become: yes
   tasks:
-    - apt: pkg={{ item }} update_cache=yes
+    - name: install required packages
+      apt: pkg={{ item }} update_cache=yes
       with_items:
         - build-essential
         - fakeroot
+
+    - name: git clone the latest OvS from github.com
+      git:
+        repo=https://github.com/openvswitch/ovs
+        dest=/tmp/ovs

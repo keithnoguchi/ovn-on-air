@@ -31,6 +31,17 @@ reachable through `hv11`, `hv12`, and `hv13`, respectively:
 
 ```
 
+## Playbooks
+
+### build.yml
+
+[build.yml](build.yml) is to setup the build environment on hv11, as explained in
+[Documentation/intro/install/debian.rst](https://github.com/openvswitch/ovs/blob/master/Documentation/intro/install/debian.rst).
+
+```
+air$ ansible-playbook build.yml
+```
+
 ## References
 
 Many thanks to all those docs!
