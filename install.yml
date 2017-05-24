@@ -25,7 +25,7 @@
     ovs_version: 2.7.90-1
   tasks:
     - name: install OvS kernel module, as in ovs/debian/openvswitch-switch.README.Debian
-      apt: deb=/tmp/{{ item }}
+      apt: deb=/tmp/{{ item }} dpkg_options="install,force-breaks,ignore-depends"
       with_items:
         - openvswitch-datapath-dkms_{{ ovs_version }}_all.deb
         - openvswitch-common_{{ ovs_version }}_amd64.deb
