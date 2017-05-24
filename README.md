@@ -2,6 +2,9 @@
 
 Let's make OVN, Open Virtual Networking, on MacBook Air!
 
+1. [Setup](#setup)
+2. [Playbooks](#playbooks)
+
 ## Setup
 
 I'm using KVM/libvirt to have those three KVM instances on Air and
