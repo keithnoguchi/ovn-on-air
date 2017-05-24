@@ -3,8 +3,6 @@
   hosts: build
   gather_facts: no
   become: yes
-  vars:
-    ovs_version: 2.7.90-1
   tasks:
     - name: install required packages
       apt: pkg={{ item }} update_cache=yes
@@ -44,8 +42,15 @@
         cd /tmp/ovs &&
         DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
 
+- name: download OvS packages from the build node
+  hosts: build
+  gather_facts: yes
+  vars:
+    ovs_version: 2.7.90-1
+  become: false
+  tasks:
     - name: download the OvS/OVN deb packages
-      fetch: src=/tmp/{{ item }} dest=/tmp/{{ item }}
+      fetch: src=/tmp/{{ item }} dest=/tmp/{{ ansible_user_id }}/{{ item }} flat=yes
       with_items:
         - openvswitch-datapath-dkms_{{ ovs_version }}_all.deb
         - openvswitch-common_{{ ovs_version }}_amd64.deb

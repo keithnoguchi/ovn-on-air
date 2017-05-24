@@ -53,7 +53,7 @@ This playbook will
 1. setup the `hv11` as a build machine
 2. git clone the latest OvS from the github
 3. build OvS/OVN
-4. download the deb package from the build machine
+4. download the deb package from the build machine to the local `/tmp` directory
 
 ### install.yml
 
@@ -64,9 +64,7 @@ the node.
 air$ ansible-playbook install.yml
 ```
 
-This playbook will
-
-1. copy deb packages downloaded by [build.yml](build.yml) playbook
+This playbook will upload the deb packages and install on all the nodes.
 
 ## References
 
