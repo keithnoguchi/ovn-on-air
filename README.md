@@ -5,7 +5,9 @@ Let's make OVN, Open Virtual Networking, on MacBook Air!
 ## Setup
 
 I'm using KVM/libvirt to have those three KVM instances on Air and
-reachable through `hv11`, `hv12`, and `hv13`, respectively:
+reachable through `hv11`, `hv12`, and `hv13`, respectively.  And
+to make the playbook clean, I'm using ubuntu 16.04 for all three
+KVM instances.
 
 ```
                       +------------+

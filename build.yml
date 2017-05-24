@@ -11,6 +11,22 @@
         - fakeroot
 
     - name: git clone the latest OvS from github.com
-      git:
-        repo=https://github.com/openvswitch/ovs
-        dest=/tmp/ovs
+      git: repo=https://github.com/openvswitch/ovs dest=/tmp/ovs
+
+    - name: install build dependency explained in ovs/debian/control
+      apt: pkg={{ item }} update_cache=no
+      with_items:
+        - graphviz
+        - autoconf
+        - automake
+        - bzip2
+        - debhelper
+        - dh-autoreconf
+        - libssl-dev
+        - libtool
+        - openssl
+        - procps
+        - python-all
+        - python-twisted-conch
+        - python-zopeinterface
+        - python-six
