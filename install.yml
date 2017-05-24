@@ -1,6 +1,6 @@
 ---
 - name: upload OvS deb packages to the node
-  hosts: all
+  hosts: ovn
   gather_facts: true
   become: false
   vars:
@@ -18,7 +18,7 @@
       when: "'build' not in group_names"
 
 - name: install OvS deb packages on all the node
-  hosts: all
+  hosts: ovn
   gather_facts: false
   become: true
   vars:
