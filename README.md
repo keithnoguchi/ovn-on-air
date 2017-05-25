@@ -148,45 +148,63 @@ Here is the result of the logical switches in north bound database
 after the playbook run:
 
 ```
-air$  ssh hv11 sudo ovn-nbctl show
-switch 23865fe0-92a2-4289-867b-36237eeba077 (green)
-    port green2
-        addresses: ["00:00:00:13:0c:01"]
+air$ ssh hv11 sudo ovn-nbctl show
+switch 8dcafba8-2782-4f0c-a328-77d8de53f542 (green)
     port green1
         addresses: ["00:00:00:12:0c:01"]
-switch 809d63e6-32d6-4698-b9d2-b973f951c69c (red)
-    port red2
-        addresses: ["00:00:00:13:0a:01"]
-    port red1
-        addresses: ["00:00:00:12:0a:01"]
-switch 20af443f-e086-4e1e-83bf-0f5a3d7d3e47 (blue)
+    port green4
+        addresses: ["00:00:00:13:0c:04"]
+    port green3
+        addresses: ["00:00:00:12:0c:03"]
+    port green2
+        addresses: ["00:00:00:13:0c:02"]
+switch b7566b94-4ada-4ed0-983a-2a0ef97e3daa (blue)
+    port blue3
+        addresses: ["00:00:00:12:0b:03"]
+    port blue2
+        addresses: ["00:00:00:13:0b:02"]
+    port blue4
+        addresses: ["00:00:00:13:0b:04"]
     port blue1
         addresses: ["00:00:00:12:0b:01"]
-    port blue2
-        addresses: ["00:00:00:13:0b:01"]
+switch b445c4b7-6315-440f-b7df-af231a3c3903 (red)
+    port red3
+        addresses: ["00:00:00:12:0a:03"]
+    port red4
+        addresses: ["00:00:00:13:0a:04"]
+    port red2
+        addresses: ["00:00:00:13:0a:02"]
+    port red1
+        addresses: ["00:00:00:12:0a:01"]
 air$
 ```
 
 and the south bound database:
 
 ```
-air$ ssh hv11 'sudo ovn-sbctl show'
+air$ ssh hv11 sudo ovn-sbctl show
 Chassis "408b15fb-9d9e-42e8-aa7a-bb9bbbeb5ed2"
     hostname: "hv13"
     Encap geneve
         ip: "192.168.122.113"
         options: {csum="true"}
-    Port_Binding "green2"
-    Port_Binding "red2"
     Port_Binding "blue2"
+    Port_Binding "green4"
+    Port_Binding "blue4"
+    Port_Binding "red2"
+    Port_Binding "red4"
+    Port_Binding "green2"
 Chassis "fcd1baa6-0954-4440-a8e4-7170036ace15"
     hostname: "hv12"
     Encap geneve
         ip: "192.168.122.112"
         options: {csum="true"}
-    Port_Binding "green1"
-    Port_Binding "red1"
+    Port_Binding "blue3"
     Port_Binding "blue1"
+    Port_Binding "green3"
+    Port_Binding "red3"
+    Port_Binding "red1"
+    Port_Binding "green1"
 air$
 ```
 

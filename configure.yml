@@ -16,30 +16,48 @@
       with_items:
         - { switch: red, port: red1 }
         - { switch: red, port: red2 }
+        - { switch: red, port: red3 }
+        - { switch: red, port: red4 }
         - { switch: blue, port: blue1 }
         - { switch: blue, port: blue2 }
+        - { switch: blue, port: blue3 }
+        - { switch: blue, port: blue4 }
         - { switch: green, port: green1 }
         - { switch: green, port: green2 }
+        - { switch: green, port: green3 }
+        - { switch: green, port: green4 }
 
     - name: setup the MAC address for the guest
       command: ovn-nbctl lsp-set-addresses {{ item.port }} {{ item.mac }}
       with_items:
         - { port: red1, mac: "{{ red1.mac }}" }
         - { port: red2, mac: "{{ red2.mac }}" }
+        - { port: red3, mac: "{{ red3.mac }}" }
+        - { port: red4, mac: "{{ red4.mac }}" }
         - { port: blue1, mac: "{{ blue1.mac }}" }
         - { port: blue2, mac: "{{ blue2.mac }}" }
+        - { port: blue3, mac: "{{ blue3.mac }}" }
+        - { port: blue4, mac: "{{ blue4.mac }}" }
         - { port: green1, mac: "{{ green1.mac }}" }
         - { port: green2, mac: "{{ green2.mac }}" }
+        - { port: green3, mac: "{{ green3.mac }}" }
+        - { port: green4, mac: "{{ green4.mac }}" }
 
     - name: setup the MAC address based port security for the guest
       command: ovn-nbctl lsp-set-port-security {{ item.port }} {{ item.mac }}
       with_items:
         - { port: red1, mac: "{{ red1.mac }}" }
         - { port: red2, mac: "{{ red2.mac }}" }
+        - { port: red3, mac: "{{ red3.mac }}" }
+        - { port: red4, mac: "{{ red4.mac }}" }
         - { port: blue1, mac: "{{ blue1.mac }}" }
         - { port: blue2, mac: "{{ blue2.mac }}" }
+        - { port: blue3, mac: "{{ blue3.mac }}" }
+        - { port: blue4, mac: "{{ blue4.mac }}" }
         - { port: green1, mac: "{{ green1.mac }}" }
         - { port: green2, mac: "{{ green2.mac }}" }
+        - { port: green3, mac: "{{ green3.mac }}" }
+        - { port: green4, mac: "{{ green4.mac }}" }
 
 - name: connects all the dots
   hosts: chassis
@@ -57,6 +75,9 @@
         - { iface: "{{ guest1.port }}", logical_port: "{{ guest1.logical_port }}" }
         - { iface: "{{ guest2.port }}", logical_port: "{{ guest2.logical_port }}" }
         - { iface: "{{ guest3.port }}", logical_port: "{{ guest3.logical_port }}" }
+        - { iface: "{{ guest4.port }}", logical_port: "{{ guest4.logical_port }}" }
+        - { iface: "{{ guest5.port }}", logical_port: "{{ guest5.logical_port }}" }
+        - { iface: "{{ guest6.port }}", logical_port: "{{ guest6.logical_port }}" }
 
 - name: show the result
   hosts: central

@@ -10,6 +10,9 @@
         - "{{ guest1.tenant }}"
         - "{{ guest2.tenant }}"
         - "{{ guest3.tenant }}"
+        - "{{ guest4.tenant }}"
+        - "{{ guest5.tenant }}"
+        - "{{ guest6.tenant }}"
       register: result
       changed_when: "result.rc == 0"
       failed_when: "result.rc != 0 and 'File exists' not in result.stderr"
@@ -23,6 +26,9 @@
         - "{{ guest1.port }}"
         - "{{ guest2.port }}"
         - "{{ guest3.port }}"
+        - "{{ guest4.port }}"
+        - "{{ guest5.port }}"
+        - "{{ guest6.port }}"
 
     - name: move those port to the appropriate name space
       command: ip link set {{ item.port }} netns {{ item.tenant }}
@@ -30,6 +36,9 @@
         - { port: "{{ guest1.port }}", tenant: "{{ guest1.tenant }}" }
         - { port: "{{ guest2.port }}", tenant: "{{ guest2.tenant }}" }
         - { port: "{{ guest3.port }}", tenant: "{{ guest3.tenant }}" }
+        - { port: "{{ guest4.port }}", tenant: "{{ guest4.tenant }}" }
+        - { port: "{{ guest5.port }}", tenant: "{{ guest5.tenant }}" }
+        - { port: "{{ guest6.port }}", tenant: "{{ guest6.tenant }}" }
       register: result
       changed_when: "result.rc == 0"
       failed_when: "result.rc != 0 and 'Cannot find device' not in result.stderr"
@@ -40,6 +49,9 @@
         - { tenant: "{{ guest1.tenant }}", port: "{{ guest1.port }}", mac: "{{ guest1.mac }}" }
         - { tenant: "{{ guest2.tenant }}", port: "{{ guest2.port }}", mac: "{{ guest2.mac }}" }
         - { tenant: "{{ guest3.tenant }}", port: "{{ guest3.port }}", mac: "{{ guest3.mac }}" }
+        - { tenant: "{{ guest4.tenant }}", port: "{{ guest4.port }}", mac: "{{ guest4.mac }}" }
+        - { tenant: "{{ guest5.tenant }}", port: "{{ guest5.port }}", mac: "{{ guest5.mac }}" }
+        - { tenant: "{{ guest6.tenant }}", port: "{{ guest6.port }}", mac: "{{ guest6.mac }}" }
 
     - name: setup IP address on those ports
       command: ip netns exec {{ item.tenant }} ip address add {{ item.ip }} dev {{ item.port }}
@@ -47,6 +59,9 @@
         - { tenant: "{{ guest1.tenant }}", port: "{{ guest1.port }}", ip: "{{ guest1.ip }}" }
         - { tenant: "{{ guest2.tenant }}", port: "{{ guest2.port }}", ip: "{{ guest2.ip }}" }
         - { tenant: "{{ guest3.tenant }}", port: "{{ guest3.port }}", ip: "{{ guest3.ip }}" }
+        - { tenant: "{{ guest4.tenant }}", port: "{{ guest4.port }}", ip: "{{ guest4.ip }}" }
+        - { tenant: "{{ guest5.tenant }}", port: "{{ guest5.port }}", ip: "{{ guest5.ip }}" }
+        - { tenant: "{{ guest6.tenant }}", port: "{{ guest6.port }}", ip: "{{ guest6.ip }}" }
       register: result
       changed_when: "result.rc == 0"
       failed_when: "result.rc != 0 and 'RTNETLINK answers: File exists' not in result.stderr"
@@ -57,3 +72,6 @@
         - { tenant: "{{ guest1.tenant }}", port: "{{ guest1.port }}" }
         - { tenant: "{{ guest2.tenant }}", port: "{{ guest2.port }}" }
         - { tenant: "{{ guest3.tenant }}", port: "{{ guest3.port }}" }
+        - { tenant: "{{ guest4.tenant }}", port: "{{ guest4.port }}" }
+        - { tenant: "{{ guest5.tenant }}", port: "{{ guest5.port }}" }
+        - { tenant: "{{ guest6.tenant }}", port: "{{ guest6.port }}" }

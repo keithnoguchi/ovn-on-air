@@ -2,21 +2,42 @@
 guest1:
   name: red2
   port: tap-red2
-  mac: 00:00:00:13:0a:01
+  mac: 00:00:00:13:0a:02
   ip: 10.0.1.2/16
   tenant: red
   logical_port: red2
 guest2:
+  name: red4
+  port: tap-red4
+  mac: 00:00:00:13:0a:04
+  ip: 10.0.1.4/16
+  tenant: red
+  logical_port: red4
+guest3:
   name: blue2
   port: tap-blue2
-  mac: 00:00:00:13:0b:01
+  mac: 00:00:00:13:0b:02
   ip: 10.0.2.2/16
   tenant: blue
   logical_port: blue2
-guest3:
+guest4:
+  name: blue4
+  port: tap-blue4
+  mac: 00:00:00:13:0b:04
+  ip: 10.0.2.4/16
+  tenant: blue
+  logical_port: blue4
+guest5:
   name: green2
   port: tap-green2
-  mac: 00:00:00:13:0c:01
+  mac: 00:00:00:13:0c:02
   ip: 10.0.3.2/16
   tenant: green
   logical_port: green2
+guest6:
+  name: green4
+  port: tap-green4
+  mac: 00:00:00:13:0c:04
+  ip: 10.0.3.4/16
+  tenant: green
+  logical_port: green4
