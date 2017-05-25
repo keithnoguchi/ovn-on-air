@@ -42,6 +42,7 @@ KVM instances.
 2. [install.yml](#installyml)
 3. [setup.yml](#setupyml)
 4. [configure.yml](configureyml)
+5. [fake.yml](fakeyml)
 
 ### build.yml
 
@@ -141,11 +142,30 @@ switch 20af443f-e086-4e1e-83bf-0f5a3d7d3e47 (blue)
 air$
 ```
 
+### fake.yml
+
+This is a plabook to create a namespace based fake VMs, as explained in
+[Dustin Spinhirne's OVN primer](http://blog.spinhirne.com/2016/09/a-primer-on-ovn.html):
+
+```
+air$ ansible-playbook fake.yml
+```
+
+This playbook will create a fake guest through the name spaces through
+the following steps:
+
+1. Create name spaces
+2. Create itnerfaces through the `ovs-vsctl`
+3. Move those interfaces to the appropriate name space
+4. Assign the MAC address
+5. Assign the IP address
+6. Set the interface state to up
+
 ## References
 
 Many thanks to all those docs!
 
-- [OVN primar](http://blog.spinhirne.com/2016/09/a-primer-on-ovn.html)
+- [OVN primer](http://blog.spinhirne.com/2016/09/a-primer-on-ovn.html)
 - [OVN tutorial](http://openvswitch.org/support/dist-docs-2.5/tutorial/OVN-Tutorial.md.html)
 - [OVN with Kubernetes](https://github.com/openvswitch/ovn-kubernetes/blob/master/README.md)
 

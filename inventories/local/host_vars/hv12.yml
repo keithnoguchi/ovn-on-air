@@ -1,0 +1,19 @@
+---
+guest1:
+  namespace: red
+  name: red1
+  port: veth-red1
+  mac: 00:00:00:12:0a:01
+  ip: 10.0.1.1/16
+guest2:
+  namespace: blue
+  name: blue1
+  port: veth-blue1
+  mac: 00:00:00:12:0b:01
+  ip: 10.0.2.1/16
+guest3:
+  namespace: green
+  name: green1
+  port: veth-green1
+  mac: 00:00:00:12:0c:01
+  ip: 10.0.3.1/16
