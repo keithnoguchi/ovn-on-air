@@ -1,5 +1,5 @@
 ---
-- name: setup OVN
+- name: setup OVN database
   hosts: central
   gather_facts: no
   become: yes
@@ -41,10 +41,40 @@
         - { port: green1, mac: "{{ green1.mac }}" }
         - { port: green2, mac: "{{ green2.mac }}" }
 
+- name: connects all the dots
+  hosts: chassis
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: map the physical port to the logical port
+      openvswitch_db:
+        table: Interface
+        record: "{{ item.iface }}"
+        col: external_ids
+        key: iface-id
+        value: "{{ item.logical_port }}"
+      with_items:
+        - { iface: "{{ guest1.port }}", logical_port: "{{ guest1.logical_port }}" }
+        - { iface: "{{ guest2.port }}", logical_port: "{{ guest2.logical_port }}" }
+        - { iface: "{{ guest3.port }}", logical_port: "{{ guest3.logical_port }}" }
+
+- name: show the result
+  hosts: central
+  gather_facts: no
+  become: yes
+  tasks:
     - name: ovn-nbctl show
       command: ovn-nbctl show
       register: result
       changed_when: false
 
     - name: dump ovn-nbctl show result
+      debug: var=result.stdout_lines
+
+    - name: ovn-sbctl show
+      command: ovn-sbctl show
+      register: result
+      changed_when: false
+
+    - name: dump ovn-sbctl show result
       debug: var=result.stdout_lines

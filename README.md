@@ -41,8 +41,8 @@ KVM instances.
 1. [build.yml](#buildyml)
 2. [install.yml](#installyml)
 3. [setup.yml](#setupyml)
-4. [configure.yml](configureyml)
-5. [fake.yml](fakeyml)
+4. [guest.yml](#guestyml)
+5. [configure.yml](#configureyml)
 
 ### build.yml
 
@@ -106,9 +106,32 @@ tcp6       0      0 :::22                   :::*                    LISTEN      
 air$
 ```
 
+### guest.yml
+
+Now, all the hosts are properly configured and connected each other,
+let's take care of the guests next.  As explained by
+[Dustin Spinhirne](http://blog.spinhirne) in his
+[wonderful OVN primer](http://blog.spinhirne.com/2016/09/a-primer-on-ovn.html),
+we'll use Linux name space to quickly simulate the guests.
+
+```
+air$ ansible-playbook guest.yml
+```
+
+This playbook will create name space based guests, aka fake guests, with the
+following steps:
+
+1. Create name spaces
+2. Create itnerfaces through the `ovs-vsctl`
+3. Move those interfaces to the appropriate name space
+4. Assign the MAC address
+5. Assign the IP address
+6. Set the interface state to up
+
 ### configure.yml
 
-Now, all the nodes got configured and talking each other.  Let's configure the OVN!
+Now, all the hosts and guests configured and up and running, let's connects
+those together by creating the virtual network through OVN!
 
 ```
 air$ ansible-playbook configure.yml
@@ -119,8 +142,10 @@ This playbook will:
 1. Create logical switches for each tenant, e.g. red, blue, green
 2. Create logical ports, e.g. red1, red2, under the appropriate switches
 3. Setup MAC address and MAC address based port security on the appropriate switches
+4. Map the physical ports to the logical ports to connect the dots!
 
-Here is the result of the logical switches after the playbook run.
+Here is the result of the logical switches in north bound database
+after the playbook run:
 
 ```
 air$  ssh hv11 sudo ovn-nbctl show
@@ -142,24 +167,62 @@ switch 20af443f-e086-4e1e-83bf-0f5a3d7d3e47 (blue)
 air$
 ```
 
-### fake.yml
-
-This is a plabook to create a namespace based fake VMs, as explained in
-[Dustin Spinhirne's OVN primer](http://blog.spinhirne.com/2016/09/a-primer-on-ovn.html):
+and the south bound database:
 
 ```
-air$ ansible-playbook fake.yml
+air$ ssh hv11 'sudo ovn-sbctl show'
+Chassis "408b15fb-9d9e-42e8-aa7a-bb9bbbeb5ed2"
+    hostname: "hv13"
+    Encap geneve
+        ip: "192.168.122.113"
+        options: {csum="true"}
+    Port_Binding "green2"
+    Port_Binding "red2"
+    Port_Binding "blue2"
+Chassis "fcd1baa6-0954-4440-a8e4-7170036ace15"
+    hostname: "hv12"
+    Encap geneve
+        ip: "192.168.122.112"
+        options: {csum="true"}
+    Port_Binding "green1"
+    Port_Binding "red1"
+    Port_Binding "blue1"
+air$
 ```
 
-This playbook will create a fake guest through the name spaces through
-the following steps:
+Now, you can send ping between two guests on a separate
+chassis.  Here is the ping result between `red1` to `red2`:
 
-1. Create name spaces
-2. Create itnerfaces through the `ovs-vsctl`
-3. Move those interfaces to the appropriate name space
-4. Assign the MAC address
-5. Assign the IP address
-6. Set the interface state to up
+```
+air$ ssh hv12 'sudo ip netns exec red ping -c5 10.0.1.2'
+PING 10.0.1.2 (10.0.1.2) 56(84) bytes of data.
+64 bytes from 10.0.1.2: icmp_seq=1 ttl=64 time=0.329 ms
+64 bytes from 10.0.1.2: icmp_seq=2 ttl=64 time=0.550 ms
+64 bytes from 10.0.1.2: icmp_seq=3 ttl=64 time=0.631 ms
+64 bytes from 10.0.1.2: icmp_seq=4 ttl=64 time=0.614 ms
+64 bytes from 10.0.1.2: icmp_seq=5 ttl=64 time=0.374 ms
+
+--- 10.0.1.2 ping statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 3999ms
+rtt min/avg/max/mdev = 0.329/0.499/0.631/0.127 ms
+air$
+```
+
+And also, there is no reachability between `red1` and `blue2`:
+
+```
+air$ ssh hv12 'sudo ip netns exec red ping -c5 10.0.2.2'
+^CKilled by signal 2.
+air$
+```
+
+nor between `red1` and `blue1`:
+
+```
+air$ ssh hv12 'sudo ip netns exec red ping -c5 10.0.2.1'
+^CKilled by signal 2.
+air$
+```
 
 ## References
 

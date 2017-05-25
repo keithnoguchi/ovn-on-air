@@ -1,0 +1,59 @@
+---
+- name: setup fake VMs on chassis
+  hosts: chassis
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: add new name space to simulate the VMs
+      command: ip netns add {{ item }}
+      with_items:
+        - "{{ guest1.tenant }}"
+        - "{{ guest2.tenant }}"
+        - "{{ guest3.tenant }}"
+      register: result
+      changed_when: "result.rc == 0"
+      failed_when: "result.rc != 0 and 'File exists' not in result.stderr"
+
+    - name: create the OvS internal port through ovs-vsctl
+      openvswitch_port:
+        bridge: br-int
+        port: "{{ item }}"
+        set: Interface "{{ item }}" type=internal
+      with_items:
+        - "{{ guest1.port }}"
+        - "{{ guest2.port }}"
+        - "{{ guest3.port }}"
+
+    - name: move those port to the appropriate name space
+      command: ip link set {{ item.port }} netns {{ item.tenant }}
+      with_items:
+        - { port: "{{ guest1.port }}", tenant: "{{ guest1.tenant }}" }
+        - { port: "{{ guest2.port }}", tenant: "{{ guest2.tenant }}" }
+        - { port: "{{ guest3.port }}", tenant: "{{ guest3.tenant }}" }
+      register: result
+      changed_when: "result.rc == 0"
+      failed_when: "result.rc != 0 and 'Cannot find device' not in result.stderr"
+
+    - name: setup MAC address on those ports
+      command: ip netns exec {{ item.tenant }} ip link set {{ item.port }} address {{ item.mac }}
+      with_items:
+        - { tenant: "{{ guest1.tenant }}", port: "{{ guest1.port }}", mac: "{{ guest1.mac }}" }
+        - { tenant: "{{ guest2.tenant }}", port: "{{ guest2.port }}", mac: "{{ guest2.mac }}" }
+        - { tenant: "{{ guest3.tenant }}", port: "{{ guest3.port }}", mac: "{{ guest3.mac }}" }
+
+    - name: setup IP address on those ports
+      command: ip netns exec {{ item.tenant }} ip address add {{ item.ip }} dev {{ item.port }}
+      with_items:
+        - { tenant: "{{ guest1.tenant }}", port: "{{ guest1.port }}", ip: "{{ guest1.ip }}" }
+        - { tenant: "{{ guest2.tenant }}", port: "{{ guest2.port }}", ip: "{{ guest2.ip }}" }
+        - { tenant: "{{ guest3.tenant }}", port: "{{ guest3.port }}", ip: "{{ guest3.ip }}" }
+      register: result
+      changed_when: "result.rc == 0"
+      failed_when: "result.rc != 0 and 'RTNETLINK answers: File exists' not in result.stderr"
+
+    - name: setup the link
+      command: ip netns exec {{ item.tenant }} ip link set {{ item.port }} up
+      with_items:
+        - { tenant: "{{ guest1.tenant }}", port: "{{ guest1.port }}" }
+        - { tenant: "{{ guest2.tenant }}", port: "{{ guest2.port }}" }
+        - { tenant: "{{ guest3.tenant }}", port: "{{ guest3.port }}" }
