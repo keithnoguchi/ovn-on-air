@@ -24,22 +24,22 @@
     - name: setup the MAC address for the guest
       command: ovn-nbctl lsp-set-addresses {{ item.port }} {{ item.mac }}
       with_items:
-        - { port: red1, mac: "{{ red1_mac }}" }
-        - { port: red2, mac: "{{ red2_mac }}" }
-        - { port: blue1, mac: "{{ blue1_mac }}" }
-        - { port: blue2, mac: "{{ blue2_mac }}" }
-        - { port: green1, mac: "{{ green1_mac }}" }
-        - { port: green2, mac: "{{ green2_mac }}" }
+        - { port: red1, mac: "{{ red1.mac }}" }
+        - { port: red2, mac: "{{ red2.mac }}" }
+        - { port: blue1, mac: "{{ blue1.mac }}" }
+        - { port: blue2, mac: "{{ blue2.mac }}" }
+        - { port: green1, mac: "{{ green1.mac }}" }
+        - { port: green2, mac: "{{ green2.mac }}" }
 
     - name: setup the MAC address based port security for the guest
       command: ovn-nbctl lsp-set-port-security {{ item.port }} {{ item.mac }}
       with_items:
-        - { port: red1, mac: "{{ red1_mac }}" }
-        - { port: red2, mac: "{{ red2_mac }}" }
-        - { port: blue1, mac: "{{ blue1_mac }}" }
-        - { port: blue2, mac: "{{ blue2_mac }}" }
-        - { port: green1, mac: "{{ green1_mac }}" }
-        - { port: green2, mac: "{{ green2_mac }}" }
+        - { port: red1, mac: "{{ red1.mac }}" }
+        - { port: red2, mac: "{{ red2.mac }}" }
+        - { port: blue1, mac: "{{ blue1.mac }}" }
+        - { port: blue2, mac: "{{ blue2.mac }}" }
+        - { port: green1, mac: "{{ green1.mac }}" }
+        - { port: green2, mac: "{{ green2.mac }}" }
 
     - name: ovn-nbctl show
       command: ovn-nbctl show
