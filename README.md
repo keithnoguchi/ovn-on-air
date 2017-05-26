@@ -109,8 +109,8 @@ air$
 ### guest.yml
 
 Now, all the hosts are properly configured and connected each other,
-let's take care of the guests next.  As explained by
-[Dustin Spinhirne](http://blog.spinhirne) in his
+let's take care of the guests next with [guest.yml](guest.yml).
+As explained by [Dustin Spinhirne](http://blog.spinhirne) in his
 [wonderful OVN primer](http://blog.spinhirne.com/2016/09/a-primer-on-ovn.html),
 we'll use Linux name space to quickly simulate the guests.
 
@@ -131,7 +131,8 @@ following steps:
 ### configure.yml
 
 Now, all the hosts and guests configured and up and running, let's connects
-those together by creating the virtual network through OVN!
+those together by creating the virtual network through OVN through
+[configure.yml](configure.yml)!
 
 ```
 air$ ansible-playbook configure.yml
