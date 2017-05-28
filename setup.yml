@@ -24,7 +24,7 @@
         record: .
         col: external_ids
         key: ovn-remote
-        value: "{{ ovn_remote }}"
+        value: \""{{ ovn_remote }}"\"
 
     - name: use geneve as a overlay encapsulation protocol
       openvswitch_db:
