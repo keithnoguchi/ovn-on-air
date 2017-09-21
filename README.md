@@ -62,6 +62,11 @@ This playbook will:
 
 ### install.yml
 
+Before installing your greatest OvS/OVN, better to remove the default OvS/OVN
+packages, to avoid the confusion, especially you installed those in a different
+locations, e.g. `/usr/local/...`.  You can do that by `sudo apt remove`, if you
+installed those through the standard APT package manager.
+
 [install.yml](install.yml) will install the required deb packages to all
 the node.
 
