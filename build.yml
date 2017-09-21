@@ -46,13 +46,14 @@
   hosts: build
   gather_facts: yes
   vars:
-    ovs_version: 2.7.90-1
+    ovs_version: 2.8.90-1
   become: false
   tasks:
     - name: download the OvS/OVN deb packages
       fetch: src=/tmp/{{ item }} dest=/tmp/{{ ansible_user_id }}/{{ item }} flat=yes
       with_items:
         - openvswitch-datapath-dkms_{{ ovs_version }}_all.deb
+        - libopenvswitch_{{ ovs_version }}_amd64.deb
         - openvswitch-common_{{ ovs_version }}_amd64.deb
         - openvswitch-switch_{{ ovs_version }}_amd64.deb
         - ovn-common_{{ ovs_version }}_amd64.deb
