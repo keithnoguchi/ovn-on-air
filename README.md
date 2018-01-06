@@ -9,7 +9,7 @@ on [MacBook Air](https://github.com/keinohguchi/arch-on-air/blob/master/README.m
 ## Setup
 
 I'm using KVM/libvirt to have those three KVM instances on Air and
-reachable through `hv11`, `hv12`, and `hv13`, respectively.  And
+reachable through `hv12`, `node20`, and `node21`, respectively.  And
 to make the playbook clean, I'm using ubuntu 16.04 for all three
 KVM instances.
 
@@ -46,7 +46,7 @@ KVM instances.
 
 ### build.yml
 
-[build.yml](build.yml) is to setup the build environment on hv11, as explained in
+[build.yml](build.yml) is to setup the build environment on hv12, as explained in
 [Documentation/intro/install/debian.rst](https://github.com/openvswitch/ovs/blob/master/Documentation/intro/install/debian.rst).
 
 ```
@@ -55,7 +55,7 @@ air$ ansible-playbook build.yml
 
 This playbook will:
 
-1. setup the `hv11` as a build machine
+1. setup the `hv12` as a build machine
 2. git clone the latest OvS from the github
 3. build OvS/OVN
 4. download the deb package from the build machine to the local `/tmp` directory
@@ -95,7 +95,7 @@ After the playbook run, you should be able to see the OVN connection, `TCP/6642`
 between the central node and the chassis nodes, as shown below.
 
 ```
-air$ ssh hv11 netstat -antp
+air$ ssh hv12 netstat -antp
 (Not all processes could be identified, non-owned process info
  will not be shown, you would have to be root to see it all.)
 Active Internet connections (servers and established)
@@ -154,88 +154,88 @@ Here is the result of the logical switches in north bound database
 after the playbook run:
 
 ```
-air$ ssh hv11 sudo ovn-nbctl show
-switch 8dcafba8-2782-4f0c-a328-77d8de53f542 (green)
-    port green1
-        addresses: ["00:00:00:12:0c:01"]
+air0$ ssh hv12 sudo ovn-nbctl show
+switch baff58cc-649e-47da-9423-14bd20a7de0d (red)
+    port red4
+        addresses: ["00:00:00:13:0a:04"]
+    port red1
+        addresses: ["00:00:00:12:0a:01"]
+    port red2
+        addresses: ["00:00:00:13:0a:02"]
+    port red3
+        addresses: ["00:00:00:12:0a:03"]
+switch 9aac643d-a00c-43a0-a139-27548a3f073a (green)
     port green4
         addresses: ["00:00:00:13:0c:04"]
+    port green1
+        addresses: ["00:00:00:12:0c:01"]
     port green3
         addresses: ["00:00:00:12:0c:03"]
     port green2
         addresses: ["00:00:00:13:0c:02"]
-switch b7566b94-4ada-4ed0-983a-2a0ef97e3daa (blue)
-    port blue3
-        addresses: ["00:00:00:12:0b:03"]
+switch b153ee2a-00c5-45c0-88e9-e1566f929bde (blue)
+    port blue1
+        addresses: ["00:00:00:12:0b:01"]
     port blue2
         addresses: ["00:00:00:13:0b:02"]
     port blue4
         addresses: ["00:00:00:13:0b:04"]
-    port blue1
-        addresses: ["00:00:00:12:0b:01"]
-switch b445c4b7-6315-440f-b7df-af231a3c3903 (red)
-    port red3
-        addresses: ["00:00:00:12:0a:03"]
-    port red4
-        addresses: ["00:00:00:13:0a:04"]
-    port red2
-        addresses: ["00:00:00:13:0a:02"]
-    port red1
-        addresses: ["00:00:00:12:0a:01"]
-air$
+    port blue3
+        addresses: ["00:00:00:12:0b:03"]
+air0$
 ```
 
 and the south bound database:
 
 ```
-air$ ssh hv11 sudo ovn-sbctl show
-Chassis "408b15fb-9d9e-42e8-aa7a-bb9bbbeb5ed2"
-    hostname: "hv13"
+air0$ ssh hv12 sudo ovn-sbctl show
+Chassis "849d82f5-c492-4839-a81d-6d5d68e78c37"
+    hostname: "node20.local"
     Encap geneve
-        ip: "192.168.122.113"
+        ip: "192.168.122.120"
         options: {csum="true"}
-    Port_Binding "blue2"
-    Port_Binding "green4"
-    Port_Binding "blue4"
-    Port_Binding "red2"
-    Port_Binding "red4"
-    Port_Binding "green2"
-Chassis "fcd1baa6-0954-4440-a8e4-7170036ace15"
-    hostname: "hv12"
-    Encap geneve
-        ip: "192.168.122.112"
-        options: {csum="true"}
-    Port_Binding "blue3"
-    Port_Binding "blue1"
-    Port_Binding "green3"
     Port_Binding "red3"
-    Port_Binding "red1"
+    Port_Binding "green3"
+    Port_Binding "blue1"
+    Port_Binding "blue3"
     Port_Binding "green1"
-air$
+    Port_Binding "red1"
+Chassis "2d91afc5-32dd-4dbd-a958-679fdb268a2d"
+    hostname: "node21.local"
+    Encap geneve
+        ip: "192.168.122.121"
+        options: {csum="true"}
+    Port_Binding "red2"
+    Port_Binding "blue2"
+    Port_Binding "blue4"
+    Port_Binding "green2"
+    Port_Binding "green4"
+    Port_Binding "red4"
+air0$
 ```
 
 Now, you can send ping between two guests on a separate
 chassis.  Here is the ping result between `red1` to `red2`:
 
 ```
-air$ ssh hv12 'sudo ip netns exec red ping -c5 10.0.1.2'
+air0$ ssh node20 sudo ip netns exec red ping -c5 10.0.1.2
 PING 10.0.1.2 (10.0.1.2) 56(84) bytes of data.
-64 bytes from 10.0.1.2: icmp_seq=1 ttl=64 time=0.329 ms
-64 bytes from 10.0.1.2: icmp_seq=2 ttl=64 time=0.550 ms
-64 bytes from 10.0.1.2: icmp_seq=3 ttl=64 time=0.631 ms
-64 bytes from 10.0.1.2: icmp_seq=4 ttl=64 time=0.614 ms
-64 bytes from 10.0.1.2: icmp_seq=5 ttl=64 time=0.374 ms
+64 bytes from 10.0.1.2: icmp_seq=1 ttl=64 time=1.38 ms
+64 bytes from 10.0.1.2: icmp_seq=2 ttl=64 time=0.693 ms
+64 bytes from 10.0.1.2: icmp_seq=3 ttl=64 time=0.720 ms
+64 bytes from 10.0.1.2: icmp_seq=4 ttl=64 time=0.733 ms
+64 bytes from 10.0.1.2: icmp_seq=5 ttl=64 time=0.674 ms
 
 --- 10.0.1.2 ping statistics ---
-5 packets transmitted, 5 received, 0% packet loss, time 3999ms
-rtt min/avg/max/mdev = 0.329/0.499/0.631/0.127 ms
-air$
+5 packets transmitted, 5 received, 0% packet loss, time 4001ms
+rtt min/avg/max/mdev = 0.674/0.840/1.383/0.273 ms
+air0$
 ```
 
 And also, there is no reachability between `red1` and `blue2`:
 
 ```
-air$ ssh hv12 'sudo ip netns exec red ping -c5 10.0.2.2'
+air$ ssh node20 'sudo ip netns exec red ping -c5 10.0.2.2'
 ^CKilled by signal 2.
 air$
 ```
@@ -243,7 +243,7 @@ air$
 nor between `red1` and `blue1`:
 
 ```
-air$ ssh hv12 'sudo ip netns exec red ping -c5 10.0.2.1'
+air$ ssh node20 'sudo ip netns exec red ping -c5 10.0.2.1'
 ^CKilled by signal 2.
 air$
 ```
