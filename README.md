@@ -95,20 +95,26 @@ After the playbook run, you should be able to see the OVN connection, `TCP/6642`
 between the central node and the chassis nodes, as shown below.
 
 ```
-air$ ssh hv12 netstat -antp
+air0$ ssh hv12 netstat -antp
 (Not all processes could be identified, non-owned process info
  will not be shown, you would have to be root to see it all.)
 Active Internet connections (servers and established)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:25672           0.0.0.0:*               LISTEN      -
 tcp        0      0 0.0.0.0:6641            0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:4369            0.0.0.0:*               LISTEN      -
 tcp        0      0 0.0.0.0:6642            0.0.0.0:*               LISTEN      -
 tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -
-tcp        0     72 192.168.122.111:22      192.168.122.1:60624     ESTABLISHED -
-tcp        0      0 192.168.122.111:22      192.168.122.1:60618     ESTABLISHED -
-tcp        0      0 192.168.122.111:6642    192.168.122.112:47680   ESTABLISHED -
-tcp        0      0 192.168.122.111:6642    192.168.122.113:50234   ESTABLISHED -
+tcp        0      0 127.0.0.1:51478         127.0.0.1:4369          ESTABLISHED -
+tcp        0    236 192.168.122.112:22      192.168.122.1:49548     ESTABLISHED -
+tcp        0      0 192.168.122.112:4369    192.168.122.112:33081   TIME_WAIT   -
+tcp        0      0 127.0.0.1:4369          127.0.0.1:51478         ESTABLISHED -
+tcp        0      0 192.168.122.112:6642    192.168.122.121:56008   ESTABLISHED -
+tcp        0      0 192.168.122.112:6642    192.168.122.120:47662   ESTABLISHED -
+tcp6       0      0 :::5672                 :::*                    LISTEN      -
+tcp6       0      0 :::4369                 :::*                    LISTEN      -
 tcp6       0      0 :::22                   :::*                    LISTEN      -
-air$
+air0$
 ```
 
 ### guest.yml
