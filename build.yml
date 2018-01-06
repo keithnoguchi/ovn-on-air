@@ -1,17 +1,24 @@
 ---
 - name: setup build environment
   hosts: build
+  vars:
+    gitpath: "{{ lookup('env', 'HOME') }}/git/"
   gather_facts: no
-  become: yes
   tasks:
     - name: install required packages
       apt: pkg={{ item }} update_cache=yes
       with_items:
         - build-essential
         - fakeroot
+      become: yes
 
     - name: git clone the latest OvS from github.com
-      git: repo=https://github.com/openvswitch/ovs dest=/tmp/ovs
+      git:
+        repo: https://github.com/openvswitch/ovs
+        dest: "{{ gitpath }}ovs"
+        update: yes
+        ssh_opts: "-o StrictHostKeyChecking=no"
+      register: git
 
     - name: install build dependency explained in ovs/debian/control
       apt: pkg={{ item }} update_cache=no
@@ -30,27 +37,32 @@
         - python-twisted-conch
         - python-zopeinterface
         - python-six
+      become: true
 
     - name: check the build dependency with dpkg-checkbuilddeps
       shell: >
-        cd /tmp/ovs &&
+        cd "{{ gitpath }}ovs" &&
         dpkg-checkbuilddeps
       changed_when: false
 
     - name: build OvS, as in ovs/Documentaions/intro/install/debian.rst!
       shell: >
-        cd /tmp/ovs &&
+        cd "{{ gitpath }}ovs" &&
         DEB_BUILD_OPTIONS='parallel=8 nocheck' fakeroot debian/rules binary
 
 - name: download OvS packages from the build node
   hosts: build
   gather_facts: yes
   vars:
+    gitpath: "{{ lookup('env', 'HOME') }}/git/"
     ovs_version: 2.8.90-1
   become: false
   tasks:
     - name: download the OvS/OVN deb packages
-      fetch: src=/tmp/{{ item }} dest=/tmp/{{ ansible_user_id }}/{{ item }} flat=yes
+      fetch:
+        src: "{{ gitpath }}{{ item }}"
+        dest: "/tmp/{{ ansible_user_id }}/{{ item }}"
+        flat: yes
       with_items:
         - openvswitch-datapath-dkms_{{ ovs_version }}_all.deb
         - libopenvswitch_{{ ovs_version }}_amd64.deb

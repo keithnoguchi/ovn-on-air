@@ -3,13 +3,13 @@ central
 chassis
 
 [build]
-hv11
+hv12
 
 [central]
-hv11
+hv12
 
 [chassis]
-hv12 ovn_encap_ip=192.168.122.112
-hv13 ovn_encap_ip=192.168.122.113
+node20 ovn_encap_ip=192.168.122.120
+node21 ovn_encap_ip=192.168.122.121
 [chassis:vars]
-ovn_remote=tcp:192.168.122.111:6642
+ovn_remote=tcp:192.168.122.112:6642

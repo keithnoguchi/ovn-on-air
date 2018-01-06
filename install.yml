@@ -16,7 +16,6 @@
         - ovn-common_{{ ovs_version }}_amd64.deb
         - ovn-central_{{ ovs_version }}_amd64.deb
         - ovn-host_{{ ovs_version }}_amd64.deb
-      when: "'build' not in group_names"
 
 - name: install OvS deb packages on all the node
   hosts: ovn
